@@ -1,6 +1,7 @@
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel
+from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog
 
 from constants import *
 from widgets.Color import Color
@@ -58,8 +59,13 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def set_actions(self):
-        self.openAction = QAction("&Open...", self)
+        self.openAction = QAction("&Open", self)
+        self.openAction.setShortcut("Ctrl+O")
+        self.openAction.triggered.connect(self.open_call)
+
         self.exitAction = QAction("&Exit", self)
+        self.exitAction.setShortcut("Ctrl+Q")
+        self.exitAction.triggered.connect(self.exit_call)
 
     def set_menu(self):
         menu = self.menuBar()
@@ -67,6 +73,12 @@ class MainWindow(QMainWindow):
         file = menu.addMenu("&File")
         file.addAction(self.openAction)
         file.addAction(self.exitAction)
+
+    def open_call(self):
+        name = QFileDialog.getOpenFileName(self, 'Open File')
+
+    def exit_call(self):
+        exit(0)
 
     def keyPressEvent(self, event):
         key = event.key()
