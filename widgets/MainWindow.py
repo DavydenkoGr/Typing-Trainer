@@ -1,7 +1,9 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel
+
 from constants import *
 from widgets.Color import Color
-
-from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction
 
 
 class MainWindow(QMainWindow):
@@ -13,9 +15,22 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Typing Trainer")
         self.setFixedSize(WIDTH, HEIGHT)
 
+        self.set_widgets()
         self.set_layout()
         self.set_actions()
         self.set_menu()
+
+    def set_widgets(self):
+        self.dynamic_string = QLabel(self)
+        self.dynamic_string.setFixedWidth(WIDTH)
+        self.dynamic_string.setAlignment(Qt.AlignCenter)
+
+        font = QFont()
+        font.setPointSize(36)
+
+        self.dynamic_string.setFont(font)
+        self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
+        self.dynamic_string.setText("Open your file")
 
     def set_layout(self):
         main_layout = QVBoxLayout()
@@ -29,7 +44,7 @@ class MainWindow(QMainWindow):
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
 
-        middle_layout.addWidget(Color(SECOND_BACKGROUND_COLOR))
+        middle_layout.addWidget(self.dynamic_string)
 
         lower_layout.addWidget(Color(BACKGROUND_COLOR))
         lower_layout.addWidget(Color(BACKGROUND_COLOR))
