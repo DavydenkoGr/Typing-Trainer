@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
 
-        middle_layout.addWidget(Color(BACKGROUND_COLOR))
+        middle_layout.addWidget(Color(SECOND_BACKGROUND_COLOR))
 
         lower_layout.addWidget(Color(BACKGROUND_COLOR))
         lower_layout.addWidget(Color(BACKGROUND_COLOR))
