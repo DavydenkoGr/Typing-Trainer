@@ -1,4 +1,3 @@
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog
@@ -10,6 +9,10 @@ from widgets.Color import Color
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.flags = {"timer": False, "ready": False}
+        self.current_char = None
+
         self.initUI()
 
     def initUI(self):
@@ -77,11 +80,30 @@ class MainWindow(QMainWindow):
     def open_call(self):
         name = QFileDialog.getOpenFileName(self, 'Open File')
 
+        # check()
+        # load()
+
     def exit_call(self):
         exit(0)
 
     def keyPressEvent(self, event):
+        if not (self.flags["ready"]):
+            return
+
         key = event.key()
 
-        if 65 < key < 90:
-            print(chr(key))
+        if not 65 < key < 90:
+            return
+
+        if self.current_char != chr(key).lower():
+            return
+
+        # Все проверки пройдкны успешно
+        if not self.flags["timer"]:
+            self.flags["timer"] = True
+
+        # next()
+
+        if not self.current_char:
+            self.flags["ready"] = False
+            self.flags["timer"] = False
