@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog
 
+from functions import check_text
 from constants import *
 from widgets.Color import Color
 
@@ -12,6 +13,7 @@ class MainWindow(QMainWindow):
 
         self.flags = {"timer": False, "ready": False}
         self.current_char = None
+        self.text = None
 
         self.initUI()
 
@@ -78,10 +80,17 @@ class MainWindow(QMainWindow):
         file.addAction(self.exitAction)
 
     def open_call(self):
-        name = QFileDialog.getOpenFileName(self, 'Open File')
+        try:
+            name = QFileDialog.getOpenFileName(self, 'Open File')[0]
+            text = open(name, "r").read()
 
-        # check()
-        # load()
+            if not check_text(text):
+                raise Exception("Your text doesn't match")
+
+            self.configure(text)
+
+        except Exception as exception:
+            self.statusBar().showMessage(str(exception))
 
     def exit_call(self):
         exit(0)
@@ -90,15 +99,15 @@ class MainWindow(QMainWindow):
         if not (self.flags["ready"]):
             return
 
-        key = event.key()
+        key = event.text()
 
-        if not 65 < key < 90:
+        if not key:
             return
 
-        if self.current_char != chr(key).lower():
+        if self.current_char != key:
             return
 
-        # Все проверки пройдкны успешно
+        # Все проверки пройдены успешно
         if not self.flags["timer"]:
             self.flags["timer"] = True
 
@@ -107,3 +116,8 @@ class MainWindow(QMainWindow):
         if not self.current_char:
             self.flags["ready"] = False
             self.flags["timer"] = False
+
+    def configure(self, text):
+        self.text = text
+        self.current_char = text[0]
+        self.flags["ready"] = True
