@@ -1,7 +1,7 @@
 from constants import *
 from widgets.Color import Color
 
-from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction
 
 
 class MainWindow(QMainWindow):
@@ -14,8 +14,8 @@ class MainWindow(QMainWindow):
         self.setFixedSize(WIDTH, HEIGHT)
 
         self.set_layout()
-
-        pass
+        self.set_actions()
+        self.set_menu()
 
     def set_layout(self):
         main_layout = QVBoxLayout()
@@ -41,3 +41,20 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
+
+    def set_actions(self):
+        self.openAction = QAction("&Open...", self)
+        self.exitAction = QAction("&Exit", self)
+
+    def set_menu(self):
+        menu = self.menuBar()
+
+        file = menu.addMenu("&File")
+        file.addAction(self.openAction)
+        file.addAction(self.exitAction)
+
+    def keyPressEvent(self, event):
+        key = event.key()
+
+        if 65 < key < 90:
+            print(chr(key))
