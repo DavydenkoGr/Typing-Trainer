@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         self.timer_counter = 0
         self.mistakes_count = 0
         self.pointer = None
+        self.current_text_name = None
         self.text = None
         self.text_iterator = None
         self.current_char = None
@@ -163,6 +164,7 @@ class MainWindow(QMainWindow):
                 raise Exception("Your text doesn't match")
 
             self.start_configure(text)
+            self.current_text_name = name.split("/")[-1]
 
         except Exception as exception:
             self.statusBar().showMessage(str(exception))
@@ -199,6 +201,7 @@ class MainWindow(QMainWindow):
             self.current_char = next(self.text_iterator)
 
         except StopIteration:
+            self.save_statistic()
             self.restart_try()
 
     def start_configure(self, text):
@@ -248,3 +251,15 @@ class MainWindow(QMainWindow):
     def show_statistics(self):
         self.pause_try()
         self.SW.show()
+    
+    def save_statistic(self):
+        try:
+            file = open("resources/statistics.txt", "a")
+
+            result = self.statistic.text().split("\n")[-1]
+            time = self.stopwatch.text()
+            print(f"Name: {self.current_text_name} Result: {result} Time: {time} seconds", file=file)
+
+            file.close()
+        except Exception:
+            self.statusBar().showMessage("unable to save statistic")

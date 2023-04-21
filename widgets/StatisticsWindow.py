@@ -25,7 +25,6 @@ class StatisticsWindow(QWidget):
         # Lessons statistics list
         self.statistics = QPlainTextEdit(self)
         self.statistics.setFixedSize(int(STATISTICS_WIDTH * 0.8), int(STATISTICS_HEIGHT * 0.6))
-        self.statistics.setDisabled(True)
 
         self.statistics.setStyleSheet("background-color: white")
 
@@ -66,7 +65,7 @@ class StatisticsWindow(QWidget):
 
     def clear_all(self):
         try:
-            file = open("../resources/statistics.txt", "w")
+            file = open("resources/statistics.txt", "w")
             file.close()
 
             self.statistics.clear()
