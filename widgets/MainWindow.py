@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog
+from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog, QPushButton
 
 from functions import check_text
 from constants import *
@@ -55,6 +55,17 @@ class MainWindow(QMainWindow):
         self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.stopwatch.setText(str(self.timer_counter / 10))
 
+        # Restart button
+        self.restart_button_container = Color(BACKGROUND_COLOR)
+
+        self.restart = QPushButton(self.restart_button_container)
+        self.restart.setFixedWidth(int(WIDTH / 4))
+        self.restart.clicked.connect(self.restart_try)
+        self.restart.setFocusPolicy(Qt.NoFocus)
+
+        self.restart.setFont(font)
+        self.restart.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
+        self.restart.setText("restart")
 
     def set_layout(self):
         main_layout = QVBoxLayout()
@@ -70,8 +81,9 @@ class MainWindow(QMainWindow):
 
         middle_layout.addWidget(self.dynamic_string)
 
+        lower_layout.addWidget(self.restart_button_container)
         lower_layout.addWidget(Color(BACKGROUND_COLOR))
-        lower_layout.addWidget(Color(BACKGROUND_COLOR))
+        self.restart_button_container.layout.addWidget(self.restart, alignment=Qt.AlignCenter)
 
         main_layout.addLayout(upper_layout)
         main_layout.addLayout(middle_layout)
@@ -168,3 +180,10 @@ class MainWindow(QMainWindow):
         if self.flags["timer"]:
             self.timer_counter += 1
         self.stopwatch.setText(str(self.timer_counter / 10))
+
+    def restart_try(self):
+        if not self.text:
+            return
+        text = self.text
+        self.end_configure()
+        self.start_configure(text)
