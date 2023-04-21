@@ -7,8 +7,11 @@ from constants import *
 from widgets.Color import Color
 from widgets.StatisticsWindow import StatisticsWindow
 
+
 class MainWindow(QMainWindow):
+    """main window of the application"""
     def __init__(self):
+        """initialization"""
         super().__init__()
 
         self.flags = {"ready": False, "timer": False}
@@ -23,6 +26,7 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        """PyQt element initialization"""
         self.setWindowTitle("Typing Trainer")
         self.setFixedSize(WIDTH, HEIGHT)
 
@@ -34,6 +38,7 @@ class MainWindow(QMainWindow):
         self.addAction(self.pauseAction)
 
     def set_widgets(self):
+        """set widgets"""
         font = QFont()
         font.setPointSize(FONT_SIZE)
 
@@ -108,6 +113,7 @@ class MainWindow(QMainWindow):
         self.SW = StatisticsWindow()
 
     def set_layout(self):
+        """set window layout"""
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
         middle_layout = QHBoxLayout()
@@ -136,6 +142,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def set_actions(self):
+        """set actions"""
         self.openAction = QAction("&Open", self)
         self.openAction.setShortcut("Ctrl+O")
         self.openAction.triggered.connect(self.open_call)
@@ -149,6 +156,7 @@ class MainWindow(QMainWindow):
         self.pauseAction.triggered.connect(self.pause_try)
 
     def set_menu(self):
+        """set menu"""
         menu = self.menuBar()
 
         file = menu.addMenu("&File")
@@ -156,6 +164,7 @@ class MainWindow(QMainWindow):
         file.addAction(self.exitAction)
 
     def open_call(self):
+        """open lesson"""
         try:
             name = QFileDialog.getOpenFileName(self, 'Open File')[0]
             text = open(name, "r").read()
@@ -170,9 +179,11 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(str(exception))
 
     def exit_call(self):
+        """exit application"""
         exit(0)
 
     def keyPressEvent(self, event):
+        """detect user actions. If lesson started, makes equality check of user input"""
         if not (self.flags["ready"]):
             return
 
@@ -187,7 +198,6 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(f"Current letter: {self.current_char}")
             return
 
-        # Все проверки пройдены успешно, запускаем таймер, если не запущен
         if not self.flags["timer"]:
             self.flags["timer"] = True
 
@@ -205,6 +215,7 @@ class MainWindow(QMainWindow):
             self.restart_try()
 
     def start_configure(self, text):
+        """start lesson configuration"""
         self.timer_counter = 0
         self.mistakes_count = 0
         self.pointer = 0
@@ -218,6 +229,7 @@ class MainWindow(QMainWindow):
         )
 
     def end_configure(self):
+        """end lesson configuration"""
         self.text = None
         self.text_iterator = None
         self.current_char = None
@@ -227,6 +239,7 @@ class MainWindow(QMainWindow):
         self.dynamic_string.setText("Open your file")
 
     def show_time(self):
+        """display lesson length"""
         if self.flags["timer"]:
             self.timer_counter += 1
         self.stopwatch.setText(str(self.timer_counter / 10))
@@ -239,6 +252,7 @@ class MainWindow(QMainWindow):
         self.statistic.setText(f"Statistic:\n{percentages}%")
 
     def restart_try(self):
+        """restart lesson"""
         if not self.text:
             return
         text = self.text
@@ -246,13 +260,16 @@ class MainWindow(QMainWindow):
         self.start_configure(text)
 
     def pause_try(self):
+        """pause lesson"""
         self.flags["timer"] = False
 
     def show_statistics(self):
+        """open statistics window"""
         self.pause_try()
         self.SW.show()
     
     def save_statistic(self):
+        """save lesson statistic"""
         try:
             file = open("resources/statistics.txt", "a")
 

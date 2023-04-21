@@ -6,11 +6,14 @@ from constants import *
 
 
 class StatisticsWindow(QWidget):
+    """window displays statistics"""
     def __init__(self):
+        """initialization"""
         super().__init__()
         self.initUI()
 
     def initUI(self):
+        """PyQt element initialization"""
         self.setWindowTitle("Lessons Statistic")
         self.setFixedSize(STATISTICS_WIDTH, STATISTICS_HEIGHT)
         self.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
@@ -19,6 +22,7 @@ class StatisticsWindow(QWidget):
         self.set_layout()
 
     def set_widgets(self):
+        """set widgets"""
         font = QFont()
         font.setPointSize(FONT_SIZE)
 
@@ -39,6 +43,7 @@ class StatisticsWindow(QWidget):
         self.clear.setText("clear all")
     
     def set_layout(self):
+        """set window layout"""
         layout = QVBoxLayout()
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -49,10 +54,12 @@ class StatisticsWindow(QWidget):
         self.setLayout(layout)
 
     def show(self):
+        """show window"""
         super().show()
         self.show_statistics()
 
     def show_statistics(self):
+        """display statistics to QPlainTextEdit"""
         self.statistics.clear()
 
         try:
@@ -64,6 +71,7 @@ class StatisticsWindow(QWidget):
             self.statistics.insertPlainText("unable to open file statistics.txt")
 
     def clear_all(self):
+        """clear all lessons statistics"""
         try:
             file = open("resources/statistics.txt", "w")
             file.close()
