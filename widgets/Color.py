@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QPalette, QColor
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QHBoxLayout
 
 
 class Color(QWidget):
@@ -10,3 +10,6 @@ class Color(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.Window, QColor(color))
         self.setPalette(palette)
+
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
