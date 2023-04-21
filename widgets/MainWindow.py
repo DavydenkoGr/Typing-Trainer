@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
 
         self.flags = {"timer": False, "ready": False}
         self.current_char = None
-        self.text = None
+        self.text_iterator = None
 
         self.initUI()
 
@@ -105,19 +105,24 @@ class MainWindow(QMainWindow):
             return
 
         if self.current_char != key:
+            print(self.current_char)
             return
 
-        # Все проверки пройдены успешно
+        # Все проверки пройдены успешно, запускаем таймер, если не запущен
         if not self.flags["timer"]:
             self.flags["timer"] = True
 
-        # next()
+        try:
+            self.current_char = next(self.text_iterator)
+            # next()
 
-        if not self.current_char:
-            self.flags["ready"] = False
-            self.flags["timer"] = False
+        except StopIteration as stop:
+            if not self.current_char:
+                self.flags["ready"] = False
+                self.flags["timer"] = False
+            # show_stat()
 
     def configure(self, text):
-        self.text = text
-        self.current_char = text[0]
+        self.text_iterator = iter(text)
+        self.current_char = next(self.text_iterator)
         self.flags["ready"] = True
