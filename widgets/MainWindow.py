@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
 
         self.statistics.setFont(font)
         self.statistics.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
-        self.statistics.setText("Watch statistics")
+        self.statistics.setText("watch statistics")
 
         # Statistics window
         self.SW = StatisticsWindow()

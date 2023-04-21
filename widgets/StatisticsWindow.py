@@ -36,7 +36,7 @@ class StatisticsWindow(QWidget):
 
         self.clear.setFont(font)
         self.clear.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
-        self.clear.setText("Clear all")
+        self.clear.setText("clear all")
     
     def set_layout(self):
         layout = QVBoxLayout()
