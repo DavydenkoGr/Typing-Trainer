@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout
 
 
 class ColoredWidget(QWidget):
-    """additional widget, use it to set background color of widget"""
+    """additional widget, use it to set background color to widget"""
     def __init__(self, color):
         """initialization"""
         super(ColoredWidget, self).__init__()
