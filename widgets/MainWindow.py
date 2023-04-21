@@ -11,9 +11,11 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.flags = {"timer": False, "ready": False}
-        self.current_char = None
+        self.flags = {"ready": False, "timer": False}
+        self.pointer = None
+        self.text = None
         self.text_iterator = None
+        self.current_char = None
 
         self.initUI()
 
@@ -87,7 +89,7 @@ class MainWindow(QMainWindow):
             if not check_text(text):
                 raise Exception("Your text doesn't match")
 
-            self.configure(text)
+            self.start_configure(text)
 
         except Exception as exception:
             self.statusBar().showMessage(str(exception))
@@ -105,7 +107,7 @@ class MainWindow(QMainWindow):
             return
 
         if self.current_char != key:
-            print(self.current_char)
+            self.statusBar().showMessage(f"Current letter: {self.current_char}")
             return
 
         # Все проверки пройдены успешно, запускаем таймер, если не запущен
@@ -113,16 +115,34 @@ class MainWindow(QMainWindow):
             self.flags["timer"] = True
 
         try:
+            self.pointer += 1
+
+            self.dynamic_string.setText(
+                self.text[self.pointer:min(DYNAMIC_STRING_SIZE, len(self.text))]
+            )
+
             self.current_char = next(self.text_iterator)
-            # next()
 
-        except StopIteration as stop:
-            if not self.current_char:
-                self.flags["ready"] = False
-                self.flags["timer"] = False
-            # show_stat()
+        except StopIteration:
+            self.end_configure()
 
-    def configure(self, text):
+    def start_configure(self, text):
+        self.pointer = 0
+        self.text = text
         self.text_iterator = iter(text)
         self.current_char = next(self.text_iterator)
         self.flags["ready"] = True
+
+        self.dynamic_string.setText(
+            text[self.pointer:min(DYNAMIC_STRING_SIZE, len(text))]
+        )
+
+    def end_configure(self):
+        self.pointer = None
+        self.text = None
+        self.text_iterator = None
+        self.current_char = None
+        self.flags["ready"] = False
+        self.flags["timer"] = False
+
+        self.dynamic_string.setText("Open your file")
