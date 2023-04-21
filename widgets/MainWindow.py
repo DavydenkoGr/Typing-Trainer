@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
 
         self.flags = {"ready": False, "timer": False}
         self.timer_counter = 0
+        self.mistakes_count = 0
         self.pointer = None
         self.text = None
         self.text_iterator = None
@@ -25,8 +26,8 @@ class MainWindow(QMainWindow):
         self.setFixedSize(WIDTH, HEIGHT)
 
         self.set_widgets()
-        self.set_layout()
         self.set_actions()
+        self.set_layout()
         self.set_menu()
 
         self.addAction(self.pauseAction)
@@ -56,6 +57,15 @@ class MainWindow(QMainWindow):
         self.stopwatch.setFont(font)
         self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.stopwatch.setText(str(self.timer_counter / 10))
+
+        # Statistics label
+        self.statistics = QLabel(self)
+        self.statistics.setFixedWidth(int(WIDTH / 3))
+        self.statistics.setAlignment(Qt.AlignCenter)
+
+        self.statistics.setFont(font)
+        self.statistics.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
+        self.statistics.setText("Statistics:\n")
 
         # Restart button
         self.restart_button_container = Color(BACKGROUND_COLOR)
@@ -91,7 +101,7 @@ class MainWindow(QMainWindow):
 
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
         upper_layout.addWidget(self.stopwatch)
-        upper_layout.addWidget(Color(BACKGROUND_COLOR))
+        upper_layout.addWidget(self.statistics)
 
         middle_layout.addWidget(self.dynamic_string)
 
@@ -154,6 +164,8 @@ class MainWindow(QMainWindow):
             return
 
         if self.current_char != key:
+            if self.pointer != 0:
+                self.mistakes_count += 1
             self.statusBar().showMessage(f"Current letter: {self.current_char}")
             return
 
@@ -175,6 +187,7 @@ class MainWindow(QMainWindow):
 
     def start_configure(self, text):
         self.timer_counter = 0
+        self.mistakes_count = 0
         self.pointer = 0
         self.text = text
         self.text_iterator = iter(text)
@@ -186,7 +199,6 @@ class MainWindow(QMainWindow):
         )
 
     def end_configure(self):
-        self.pointer = None
         self.text = None
         self.text_iterator = None
         self.current_char = None
@@ -199,6 +211,13 @@ class MainWindow(QMainWindow):
         if self.flags["timer"]:
             self.timer_counter += 1
         self.stopwatch.setText(str(self.timer_counter / 10))
+        if self.pointer:
+            percentages = int(
+                (self.pointer / (self.pointer + self.mistakes_count)) * 100
+            )
+        else:
+            percentages = 100
+        self.statistics.setText(f"Statistic:\n{percentages}%")
 
     def restart_try(self):
         if not self.text:
