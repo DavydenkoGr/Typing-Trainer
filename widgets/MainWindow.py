@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAct
 
 from functions import check_text
 from constants import *
-from widgets.Color import Color
+from widgets.ColoredWidget import ColoredWidget
 from widgets.StatisticsWindow import StatisticsWindow
 
 
@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         self.statistic.setText("Statistic:\n")
 
         # Restart button
-        self.restart_button_container = Color(BACKGROUND_COLOR)
+        self.restart_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.restart = QPushButton(self.restart_button_container)
         self.restart.setFixedWidth(int(WIDTH / 4))
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
         self.restart.setText("restart")
 
         # Pause button
-        self.pause_button_container = Color(BACKGROUND_COLOR)
+        self.pause_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.pause = QPushButton(self.pause_button_container)
         self.pause.setFixedWidth(int(WIDTH / 4))
@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         self.pause.setText("pause")
 
         # Statistics button
-        self.statistics_button_container = Color(BACKGROUND_COLOR)
+        self.statistics_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.statistics = QPushButton(self.statistics_button_container)
         self.statistics.setFixedWidth(int(WIDTH / 3))
