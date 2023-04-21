@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAct
 from functions import check_text
 from constants import *
 from widgets.Color import Color
-
+from widgets.StatisticsWindow import StatisticsWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -13,7 +13,9 @@ class MainWindow(QMainWindow):
 
         self.flags = {"ready": False, "timer": False}
         self.timer_counter = 0
+        self.mistakes_count = 0
         self.pointer = None
+        self.current_text_name = None
         self.text = None
         self.text_iterator = None
         self.current_char = None
@@ -25,20 +27,20 @@ class MainWindow(QMainWindow):
         self.setFixedSize(WIDTH, HEIGHT)
 
         self.set_widgets()
-        self.set_layout()
         self.set_actions()
+        self.set_layout()
         self.set_menu()
 
         self.addAction(self.pauseAction)
 
     def set_widgets(self):
+        font = QFont()
+        font.setPointSize(FONT_SIZE)
+
         # Dynamic string
         self.dynamic_string = QLabel(self)
         self.dynamic_string.setFixedWidth(WIDTH)
         self.dynamic_string.setAlignment(Qt.AlignCenter)
-
-        font = QFont()
-        font.setPointSize(36)
 
         self.dynamic_string.setFont(font)
         self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
@@ -56,6 +58,15 @@ class MainWindow(QMainWindow):
         self.stopwatch.setFont(font)
         self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.stopwatch.setText(str(self.timer_counter / 10))
+
+        # Statistic label
+        self.statistic = QLabel(self)
+        self.statistic.setFixedWidth(int(WIDTH / 3))
+        self.statistic.setAlignment(Qt.AlignCenter)
+
+        self.statistic.setFont(font)
+        self.statistic.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
+        self.statistic.setText("Statistic:\n")
 
         # Restart button
         self.restart_button_container = Color(BACKGROUND_COLOR)
@@ -81,6 +92,21 @@ class MainWindow(QMainWindow):
         self.pause.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.pause.setText("pause")
 
+        # Statistics button
+        self.statistics_button_container = Color(BACKGROUND_COLOR)
+
+        self.statistics = QPushButton(self.statistics_button_container)
+        self.statistics.setFixedWidth(int(WIDTH / 3))
+        self.statistics.clicked.connect(self.show_statistics)
+        self.statistics.setFocusPolicy(Qt.NoFocus)
+
+        self.statistics.setFont(font)
+        self.statistics.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
+        self.statistics.setText("Watch statistics")
+
+        # Statistics window
+        self.SW = StatisticsWindow()
+
     def set_layout(self):
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
@@ -89,9 +115,10 @@ class MainWindow(QMainWindow):
 
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        upper_layout.addWidget(Color(BACKGROUND_COLOR))
+        upper_layout.addWidget(self.statistics_button_container)
         upper_layout.addWidget(self.stopwatch)
-        upper_layout.addWidget(Color(BACKGROUND_COLOR))
+        upper_layout.addWidget(self.statistic)
+        self.statistics_button_container.layout.addWidget(self.statistics, alignment=Qt.AlignCenter)
 
         middle_layout.addWidget(self.dynamic_string)
 
@@ -137,6 +164,7 @@ class MainWindow(QMainWindow):
                 raise Exception("Your text doesn't match")
 
             self.start_configure(text)
+            self.current_text_name = name.split("/")[-1]
 
         except Exception as exception:
             self.statusBar().showMessage(str(exception))
@@ -154,6 +182,8 @@ class MainWindow(QMainWindow):
             return
 
         if self.current_char != key:
+            if self.pointer != 0:
+                self.mistakes_count += 1
             self.statusBar().showMessage(f"Current letter: {self.current_char}")
             return
 
@@ -171,10 +201,12 @@ class MainWindow(QMainWindow):
             self.current_char = next(self.text_iterator)
 
         except StopIteration:
+            self.save_statistic()
             self.restart_try()
 
     def start_configure(self, text):
         self.timer_counter = 0
+        self.mistakes_count = 0
         self.pointer = 0
         self.text = text
         self.text_iterator = iter(text)
@@ -186,7 +218,6 @@ class MainWindow(QMainWindow):
         )
 
     def end_configure(self):
-        self.pointer = None
         self.text = None
         self.text_iterator = None
         self.current_char = None
@@ -199,6 +230,13 @@ class MainWindow(QMainWindow):
         if self.flags["timer"]:
             self.timer_counter += 1
         self.stopwatch.setText(str(self.timer_counter / 10))
+        if self.pointer:
+            percentages = int(
+                (self.pointer / (self.pointer + self.mistakes_count)) * 100
+            )
+        else:
+            percentages = 100
+        self.statistic.setText(f"Statistic:\n{percentages}%")
 
     def restart_try(self):
         if not self.text:
@@ -209,3 +247,19 @@ class MainWindow(QMainWindow):
 
     def pause_try(self):
         self.flags["timer"] = False
+
+    def show_statistics(self):
+        self.pause_try()
+        self.SW.show()
+    
+    def save_statistic(self):
+        try:
+            file = open("resources/statistics.txt", "a")
+
+            result = self.statistic.text().split("\n")[-1]
+            time = self.stopwatch.text()
+            print(f"Name: {self.current_text_name} Result: {result} Time: {time} seconds", file=file)
+
+            file.close()
+        except Exception:
+            self.statusBar().showMessage("unable to save statistic")
