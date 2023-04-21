@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAct
 from functions import check_text
 from constants import *
 from widgets.Color import Color
-
+from widgets.StatisticsWindow import StatisticsWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -33,13 +33,13 @@ class MainWindow(QMainWindow):
         self.addAction(self.pauseAction)
 
     def set_widgets(self):
+        font = QFont()
+        font.setPointSize(FONT_SIZE)
+
         # Dynamic string
         self.dynamic_string = QLabel(self)
         self.dynamic_string.setFixedWidth(WIDTH)
         self.dynamic_string.setAlignment(Qt.AlignCenter)
-
-        font = QFont()
-        font.setPointSize(FONT_SIZE)
 
         self.dynamic_string.setFont(font)
         self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
@@ -102,6 +102,9 @@ class MainWindow(QMainWindow):
         self.statistics.setFont(font)
         self.statistics.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.statistics.setText("Watch statistics")
+
+        # Statistics window
+        self.SW = StatisticsWindow()
 
     def set_layout(self):
         main_layout = QVBoxLayout()
@@ -244,4 +247,4 @@ class MainWindow(QMainWindow):
 
     def show_statistics(self):
         self.pause_try()
-        print("show statistics")
+        self.SW.show()
