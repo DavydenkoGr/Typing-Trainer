@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.dynamic_string.setAlignment(Qt.AlignCenter)
 
         font = QFont()
-        font.setPointSize(36)
+        font.setPointSize(FONT_SIZE)
 
         self.dynamic_string.setFont(font)
         self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
