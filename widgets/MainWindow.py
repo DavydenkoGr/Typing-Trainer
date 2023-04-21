@@ -58,14 +58,14 @@ class MainWindow(QMainWindow):
         self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.stopwatch.setText(str(self.timer_counter / 10))
 
-        # Statistics label
-        self.statistics = QLabel(self)
-        self.statistics.setFixedWidth(int(WIDTH / 3))
-        self.statistics.setAlignment(Qt.AlignCenter)
+        # Statistic label
+        self.statistic = QLabel(self)
+        self.statistic.setFixedWidth(int(WIDTH / 3))
+        self.statistic.setAlignment(Qt.AlignCenter)
 
-        self.statistics.setFont(font)
-        self.statistics.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
-        self.statistics.setText("Statistics:\n")
+        self.statistic.setFont(font)
+        self.statistic.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
+        self.statistic.setText("Statistic:\n")
 
         # Restart button
         self.restart_button_container = Color(BACKGROUND_COLOR)
@@ -91,6 +91,18 @@ class MainWindow(QMainWindow):
         self.pause.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.pause.setText("pause")
 
+        # Statistics button
+        self.statistics_button_container = Color(BACKGROUND_COLOR)
+
+        self.statistics = QPushButton(self.statistics_button_container)
+        self.statistics.setFixedWidth(int(WIDTH / 3))
+        self.statistics.clicked.connect(self.show_statistics)
+        self.statistics.setFocusPolicy(Qt.NoFocus)
+
+        self.statistics.setFont(font)
+        self.statistics.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
+        self.statistics.setText("Watch statistics")
+
     def set_layout(self):
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
@@ -99,9 +111,10 @@ class MainWindow(QMainWindow):
 
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        upper_layout.addWidget(Color(BACKGROUND_COLOR))
+        upper_layout.addWidget(self.statistics_button_container)
         upper_layout.addWidget(self.stopwatch)
-        upper_layout.addWidget(self.statistics)
+        upper_layout.addWidget(self.statistic)
+        self.statistics_button_container.layout.addWidget(self.statistics, alignment=Qt.AlignCenter)
 
         middle_layout.addWidget(self.dynamic_string)
 
@@ -217,7 +230,7 @@ class MainWindow(QMainWindow):
             )
         else:
             percentages = 100
-        self.statistics.setText(f"Statistic:\n{percentages}%")
+        self.statistic.setText(f"Statistic:\n{percentages}%")
 
     def restart_try(self):
         if not self.text:
@@ -228,3 +241,6 @@ class MainWindow(QMainWindow):
 
     def pause_try(self):
         self.flags["timer"] = False
+
+    def show_statistics(self):
+        print("show statistics")
