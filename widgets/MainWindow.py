@@ -29,6 +29,8 @@ class MainWindow(QMainWindow):
         self.set_actions()
         self.set_menu()
 
+        self.addAction(self.pauseAction)
+
     def set_widgets(self):
         # Dynamic string
         self.dynamic_string = QLabel(self)
@@ -67,6 +69,18 @@ class MainWindow(QMainWindow):
         self.restart.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.restart.setText("restart")
 
+        # Pause button
+        self.pause_button_container = Color(BACKGROUND_COLOR)
+
+        self.pause = QPushButton(self.pause_button_container)
+        self.pause.setFixedWidth(int(WIDTH / 4))
+        self.pause.clicked.connect(self.pause_try)
+        self.pause.setFocusPolicy(Qt.NoFocus)
+
+        self.pause.setFont(font)
+        self.pause.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
+        self.pause.setText("pause")
+
     def set_layout(self):
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
@@ -82,8 +96,9 @@ class MainWindow(QMainWindow):
         middle_layout.addWidget(self.dynamic_string)
 
         lower_layout.addWidget(self.restart_button_container)
-        lower_layout.addWidget(Color(BACKGROUND_COLOR))
+        lower_layout.addWidget(self.pause_button_container)
         self.restart_button_container.layout.addWidget(self.restart, alignment=Qt.AlignCenter)
+        self.pause_button_container.layout.addWidget(self.pause, alignment=Qt.AlignCenter)
 
         main_layout.addLayout(upper_layout)
         main_layout.addLayout(middle_layout)
@@ -101,6 +116,10 @@ class MainWindow(QMainWindow):
         self.exitAction = QAction("&Exit", self)
         self.exitAction.setShortcut("Ctrl+Q")
         self.exitAction.triggered.connect(self.exit_call)
+
+        self.pauseAction = QAction("&Pause", self)
+        self.pauseAction.setShortcut("Escape")
+        self.pauseAction.triggered.connect(self.pause_try)
 
     def set_menu(self):
         menu = self.menuBar()
@@ -187,3 +206,6 @@ class MainWindow(QMainWindow):
         text = self.text
         self.end_configure()
         self.start_configure(text)
+
+    def pause_try(self):
+        self.flags["timer"] = False
