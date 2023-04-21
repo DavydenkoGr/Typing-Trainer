@@ -243,4 +243,5 @@ class MainWindow(QMainWindow):
         self.flags["timer"] = False
 
     def show_statistics(self):
+        self.pause_try()
         print("show statistics")
