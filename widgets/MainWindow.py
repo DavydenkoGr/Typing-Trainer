@@ -146,13 +146,13 @@ class MainWindow(QMainWindow):
             self.pointer += 1
 
             self.dynamic_string.setText(
-                self.text[self.pointer:min(DYNAMIC_STRING_SIZE, len(self.text))]
+                self.text[self.pointer:self.pointer + min(DYNAMIC_STRING_SIZE, len(self.text))]
             )
 
             self.current_char = next(self.text_iterator)
 
         except StopIteration:
-            self.end_configure()
+            self.restart_try()
 
     def start_configure(self, text):
         self.timer_counter = 0
