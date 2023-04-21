@@ -12,7 +12,7 @@ Run command
 
 - python{your_python_version} main.py  
 
-Open lessons from lessons folder or make own (notice, your lesson should match specific requirements)
+Open lessons from lessons folder or make your own (notice, your lesson should match specific requirements)
 ### Usage example
 
 ![image](resources/usage-examples/command-example.png)  
@@ -20,7 +20,7 @@ Open lessons from lessons folder or make own (notice, your lesson should match s
 ![image](resources/usage-examples/lesson-example.png)  
 ![image](resources/usage-examples/statistic-example.png)
 
-### Authors
+### Authors:
 - Davydenko Grigorii
   - GitHub: @DavydenkoGr
   - Telegram: @desertSmoke42
