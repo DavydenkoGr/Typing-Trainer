@@ -18,7 +18,7 @@ Open lessons from lessons folder or make your own (notice, your lesson should ma
 ![image](resources/usage-examples/command-example.png)  
 ![image](resources/usage-examples/open-example.png)  
 ![image](resources/usage-examples/lesson-example.png)  
-![image](resources/usage-examples/statistic-example.png)
+![image](resources/usage-examples/statistics-example.png)
 
 ### Authors:
 - Davydenko Grigorii

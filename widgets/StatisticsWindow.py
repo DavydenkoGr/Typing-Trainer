@@ -14,7 +14,7 @@ class StatisticsWindow(QWidget):
 
     def initUI(self):
         """PyQt element initialization"""
-        self.setWindowTitle("Lessons Statistic")
+        self.setWindowTitle("Lessons Statistics")
         self.setFixedSize(STATISTICS_WIDTH, STATISTICS_HEIGHT)
         self.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
 

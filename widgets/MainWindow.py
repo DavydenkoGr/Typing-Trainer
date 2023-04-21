@@ -212,6 +212,7 @@ class MainWindow(QMainWindow):
 
         except StopIteration:
             self.save_statistic()
+            self.show_statistics()
             self.restart_try()
 
     def start_configure(self, text):
@@ -275,7 +276,8 @@ class MainWindow(QMainWindow):
 
             result = self.statistic.text().split("\n")[-1]
             time = self.stopwatch.text()
-            print(f"Name: {self.current_text_name} Result: {result} Time: {time} seconds", file=file)
+            speed = int(len(self.text) / (self.timer_counter / 10) * 60)
+            print(f"Name: {self.current_text_name}, Result: {result}, Time: {time} seconds, Speed(per minute): {speed}", file=file)
 
             file.close()
         except Exception:
