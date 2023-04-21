@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog
 
@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.flags = {"ready": False, "timer": False}
+        self.timer_counter = 0
         self.pointer = None
         self.text = None
         self.text_iterator = None
@@ -29,6 +30,7 @@ class MainWindow(QMainWindow):
         self.set_menu()
 
     def set_widgets(self):
+        # Dynamic string
         self.dynamic_string = QLabel(self)
         self.dynamic_string.setFixedWidth(WIDTH)
         self.dynamic_string.setAlignment(Qt.AlignCenter)
@@ -40,6 +42,20 @@ class MainWindow(QMainWindow):
         self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
         self.dynamic_string.setText("Open your file")
 
+        # Timer
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.show_time)
+        self.timer.start(100)
+
+        self.stopwatch = QLabel(self)
+        self.stopwatch.setFixedWidth(int(WIDTH / 4))
+        self.stopwatch.setAlignment(Qt.AlignCenter)
+
+        self.stopwatch.setFont(font)
+        self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
+        self.stopwatch.setText(str(self.timer_counter / 10))
+
+
     def set_layout(self):
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
@@ -49,7 +65,7 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
 
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
-        upper_layout.addWidget(Color(BACKGROUND_COLOR))
+        upper_layout.addWidget(self.stopwatch)
         upper_layout.addWidget(Color(BACKGROUND_COLOR))
 
         middle_layout.addWidget(self.dynamic_string)
@@ -127,6 +143,7 @@ class MainWindow(QMainWindow):
             self.end_configure()
 
     def start_configure(self, text):
+        self.timer_counter = 0
         self.pointer = 0
         self.text = text
         self.text_iterator = iter(text)
@@ -146,3 +163,8 @@ class MainWindow(QMainWindow):
         self.flags["timer"] = False
 
         self.dynamic_string.setText("Open your file")
+
+    def show_time(self):
+        if self.flags["timer"]:
+            self.timer_counter += 1
+        self.stopwatch.setText(str(self.timer_counter / 10))
