@@ -3,7 +3,8 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QMainWindow, QHBoxLayout, QVBoxLayout, QAction, QLabel, QFileDialog, QPushButton
 
 from functions import check_text
-from constants import *
+from constants import WIDTH, HEIGHT, FONT_SIZE, \
+    BACKGROUND_COLOR, SECOND_BACKGROUND_COLOR, BUTTONS_COLOR, DYNAMIC_STRING_SIZE
 from widgets.ColoredWidget import ColoredWidget
 from widgets.StatisticsWindow import StatisticsWindow
 
@@ -277,7 +278,8 @@ class MainWindow(QMainWindow):
             result = self.statistic.text().split("\n")[-1]
             time = self.stopwatch.text()
             speed = int(len(self.text) / (self.timer_counter / 10) * 60)
-            print(f"Name: {self.current_text_name}, Result: {result}, Time: {time} seconds, Speed(per minute): {speed}", file=file)
+            print(f"Name: {self.current_text_name}, Result: {result}, Time: {time} seconds, Speed(per minute): {speed}",
+                  file=file)
 
             file.close()
         except Exception:

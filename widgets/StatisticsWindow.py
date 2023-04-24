@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QPlainTextEdit
 
-from constants import *
+from constants import STATISTICS_WIDTH, STATISTICS_HEIGHT, FONT_SIZE, BACKGROUND_COLOR, BUTTONS_COLOR
 
 
 class StatisticsWindow(QWidget):
