@@ -8,17 +8,20 @@ Typing Trainer is a printing simulator that allows the user to improve his skill
 
 ### Start application
 Clone project using https://github.com/DavydenkoGr/Typing-Trainer  
-Run command
+Run commands
 
-- python{your_python_version} main.py  
+```
+pip install --force-reinstall -r requirements.txt  
+python3 main.py  
+```
 
 Open lessons from lessons folder or make your own (notice, your lesson should match specific requirements)
 ### Usage example
 
-![image](resources/usage-examples/command-example.png)  
-![image](resources/usage-examples/open-example.png)  
-![image](resources/usage-examples/lesson-example.png)  
-![image](resources/usage-examples/statistics-example.png)
+![commands](resources/usage-examples/command-example.png)  
+![open lesson](resources/usage-examples/open-example.png)  
+![study](resources/usage-examples/lesson-example.png)  
+![watch statistics](resources/usage-examples/statistics-example.png)
 
 ### Authors:
 - Davydenko Grigorii
