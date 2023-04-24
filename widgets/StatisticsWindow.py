@@ -6,14 +6,14 @@ from constants import STATISTICS_WIDTH, STATISTICS_HEIGHT, FONT_SIZE, BACKGROUND
 
 
 class StatisticsWindow(QWidget):
-    """window displays statistics"""
+    """statistics window, displays all completed lessons statistics"""
     def __init__(self):
         """initialization"""
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        """PyQt element initialization"""
+        """PyQt's elements initialization"""
         self.setWindowTitle("Lessons Statistics")
         self.setFixedSize(STATISTICS_WIDTH, STATISTICS_HEIGHT)
         self.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
@@ -22,62 +22,67 @@ class StatisticsWindow(QWidget):
         self.set_layout()
 
     def set_widgets(self):
-        """set widgets"""
+        """sets widgets"""
         font = QFont()
         font.setPointSize(FONT_SIZE)
 
-        # Lessons statistics list
+        self.set_statistics_list()
+        self.set_clean_button(font)
+
+    def set_statistics_list(self):
+        """sets list which displays all completed lessons statistics"""
         self.statistics = QPlainTextEdit(self)
         self.statistics.setFixedSize(int(STATISTICS_WIDTH * 0.8), int(STATISTICS_HEIGHT * 0.6))
 
         self.statistics.setStyleSheet("background-color: white")
 
-        # Clear button
-        self.clear = QPushButton(self)
-        self.clear.setFixedWidth(int(STATISTICS_WIDTH * 0.8))
-        self.clear.clicked.connect(self.clear_all)
-        self.clear.setFocusPolicy(Qt.NoFocus)
+    def set_clean_button(self, font):
+        """sets button which cleans all completed lessons statistics"""
+        self.clean = QPushButton(self)
+        self.clean.setFixedWidth(int(STATISTICS_WIDTH * 0.8))
+        self.clean.clicked.connect(self.clean_all)
+        self.clean.setFocusPolicy(Qt.NoFocus)
 
-        self.clear.setFont(font)
-        self.clear.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
-        self.clear.setText("clear all")
-    
+        self.clean.setFont(font)
+        self.clean.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
+        self.clean.setText("clean all")
+
     def set_layout(self):
-        """set window layout"""
+        """sets window layout"""
         layout = QVBoxLayout()
 
         layout.setContentsMargins(0, 0, 0, 0)
 
         layout.addWidget(self.statistics, alignment=Qt.AlignCenter)
-        layout.addWidget(self.clear, alignment=Qt.AlignCenter)
+        layout.addWidget(self.clean, alignment=Qt.AlignCenter)
 
         self.setLayout(layout)
 
     def show(self):
-        """show window"""
+        """shows this window"""
         super().show()
         self.show_statistics()
 
     def show_statistics(self):
-        """display statistics to QPlainTextEdit"""
-        self.statistics.clear()
+        """displays statistics to QPlainTextEdit"""
+        self.statistics.clean()
 
         try:
             file = open("resources/statistics.txt", "r")
             for line in file.readlines():
                 self.statistics.insertPlainText(line)
         except Exception:
-            self.statistics.clear()
+            self.statistics.clean()
             self.statistics.insertPlainText("unable to open file statistics.txt")
 
-    def clear_all(self):
-        """clear all lessons statistics"""
+    def clean_all(self):
+        """cleans all lessons statistics"""
         try:
             file = open("resources/statistics.txt", "w")
             file.close()
 
-            self.statistics.clear()
+            self.statistics.clean()
             self.statistics.insertPlainText("Success!")
         except Exception:
-            self.statistics.clear()
-            self.statistics.insertPlainText("unable to clear file statistics.txt")
+            self.statistics.clean()
+            self.statistics.insertPlainText("unable to clean file statistics.txt")

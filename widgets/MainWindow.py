@@ -10,9 +10,9 @@ from widgets.StatisticsWindow import StatisticsWindow
 
 
 class MainWindow(QMainWindow):
-    """main window of the application"""
+    """main window of the application, executes all main application functions"""
     def __init__(self):
-        """initialization"""
+        """initialization of the main window, sets pre-configure"""
         super().__init__()
 
         self.flags = {"ready": False, "timer": False}
@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        """PyQt element initialization"""
+        """PyQt's elements initialization"""
         self.setWindowTitle("Typing Trainer")
         self.setFixedSize(WIDTH, HEIGHT)
 
@@ -39,11 +39,22 @@ class MainWindow(QMainWindow):
         self.addAction(self.pauseAction)
 
     def set_widgets(self):
-        """set widgets"""
+        """sets all widgets"""
         font = QFont()
         font.setPointSize(FONT_SIZE)
 
-        # Dynamic string
+        self.set_dynamic_string(font)
+        self.set_timer(font)
+        self.set_statistic_label(font)
+        self.set_restart_button(font)
+        self.set_pause_button(font)
+        self.set_statistics_button(font)
+
+        # Statistics window
+        self.SW = StatisticsWindow()
+
+    def set_dynamic_string(self, font):
+        """sets main label, which change dynamically when user presses correct keys"""
         self.dynamic_string = QLabel(self)
         self.dynamic_string.setFixedWidth(WIDTH)
         self.dynamic_string.setAlignment(Qt.AlignCenter)
@@ -52,7 +63,8 @@ class MainWindow(QMainWindow):
         self.dynamic_string.setStyleSheet(f"background-color: {SECOND_BACKGROUND_COLOR}")
         self.dynamic_string.setText("Open your file")
 
-        # Timer
+    def set_timer(self, font):
+        """sets timer which includes timer and stopwatch label"""
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.show_time)
         self.timer.start(100)
@@ -65,7 +77,8 @@ class MainWindow(QMainWindow):
         self.stopwatch.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.stopwatch.setText(str(self.timer_counter / 10))
 
-        # Statistic label
+    def set_statistic_label(self, font):
+        """sets label which shows current lesson statistic"""
         self.statistic = QLabel(self)
         self.statistic.setFixedWidth(int(WIDTH / 3))
         self.statistic.setAlignment(Qt.AlignCenter)
@@ -74,7 +87,8 @@ class MainWindow(QMainWindow):
         self.statistic.setStyleSheet(f"background-color: {BACKGROUND_COLOR}")
         self.statistic.setText("Statistic:\n")
 
-        # Restart button
+    def set_restart_button(self, font):
+        """sets restart button which stores in the container"""
         self.restart_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.restart = QPushButton(self.restart_button_container)
@@ -86,7 +100,8 @@ class MainWindow(QMainWindow):
         self.restart.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.restart.setText("restart")
 
-        # Pause button
+    def set_pause_button(self, font):
+        """sets pause button which stores in the container"""
         self.pause_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.pause = QPushButton(self.pause_button_container)
@@ -98,7 +113,8 @@ class MainWindow(QMainWindow):
         self.pause.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.pause.setText("pause")
 
-        # Statistics button
+    def set_statistics_button(self, font):
+        """sets button which opens statistics window"""
         self.statistics_button_container = ColoredWidget(BACKGROUND_COLOR)
 
         self.statistics = QPushButton(self.statistics_button_container)
@@ -110,11 +126,8 @@ class MainWindow(QMainWindow):
         self.statistics.setStyleSheet(f"background-color: {BUTTONS_COLOR}")
         self.statistics.setText("watch statistics")
 
-        # Statistics window
-        self.SW = StatisticsWindow()
-
     def set_layout(self):
-        """set window layout"""
+        """sets window layout"""
         main_layout = QVBoxLayout()
         upper_layout = QHBoxLayout()
         middle_layout = QHBoxLayout()
@@ -143,7 +156,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def set_actions(self):
-        """set actions"""
+        """sets actions"""
         self.openAction = QAction("&Open", self)
         self.openAction.setShortcut("Ctrl+O")
         self.openAction.triggered.connect(self.open_call)
@@ -157,7 +170,7 @@ class MainWindow(QMainWindow):
         self.pauseAction.triggered.connect(self.pause_try)
 
     def set_menu(self):
-        """set menu"""
+        """sets drop-down menu with hotkeys"""
         menu = self.menuBar()
 
         file = menu.addMenu("&File")
@@ -165,7 +178,7 @@ class MainWindow(QMainWindow):
         file.addAction(self.exitAction)
 
     def open_call(self):
-        """open lesson"""
+        """opens lesson abd configure current settings, shows errors in status bar"""
         try:
             name = QFileDialog.getOpenFileName(self, 'Open File')[0]
             text = open(name, "r").read()
@@ -184,7 +197,7 @@ class MainWindow(QMainWindow):
         exit(0)
 
     def keyPressEvent(self, event):
-        """detect user actions. If lesson started, makes equality check of user input"""
+        """detects user actions. If lesson started, makes equality check of user input"""
         if not (self.flags["ready"]):
             return
 
@@ -202,6 +215,10 @@ class MainWindow(QMainWindow):
         if not self.flags["timer"]:
             self.flags["timer"] = True
 
+        self.change_condition()
+
+    def change_condition(self):
+        """updates dynamic string and restarts lesson if it's completed"""
         try:
             self.pointer += 1
 
@@ -241,7 +258,7 @@ class MainWindow(QMainWindow):
         self.dynamic_string.setText("Open your file")
 
     def show_time(self):
-        """display lesson length"""
+        """displays lesson length on the stopwatch label"""
         if self.flags["timer"]:
             self.timer_counter += 1
         self.stopwatch.setText(str(self.timer_counter / 10))
@@ -254,7 +271,7 @@ class MainWindow(QMainWindow):
         self.statistic.setText(f"Statistic:\n{percentages}%")
 
     def restart_try(self):
-        """restart lesson"""
+        """restarts lesson and lesson configuration"""
         if not self.text:
             return
         text = self.text
@@ -262,16 +279,16 @@ class MainWindow(QMainWindow):
         self.start_configure(text)
 
     def pause_try(self):
-        """pause lesson"""
+        """pauses lesson"""
         self.flags["timer"] = False
 
     def show_statistics(self):
-        """open statistics window"""
+        """opens statistics window"""
         self.pause_try()
         self.SW.show()
     
     def save_statistic(self):
-        """save lesson statistic"""
+        """saves lesson statistic to the resources/statistics.txt"""
         try:
             file = open("resources/statistics.txt", "a")
 
